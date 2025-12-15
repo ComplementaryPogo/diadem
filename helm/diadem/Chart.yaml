@@ -1,0 +1,15 @@
+apiVersion: v2
+name: diadem
+description: A Helm chart for Diadem
+type: application
+version: 0.1.0
+appVersion: "0.0.1"
+keywords:
+  - pokemon
+  - map
+  - frontend
+home: https://github.com/ccev/diadem
+sources:
+  - https://github.com/ccev/diadem
+maintainers:
+  - name: ccev

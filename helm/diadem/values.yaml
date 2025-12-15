@@ -1,0 +1,154 @@
+# Diadem Helm Chart Values
+
+replicaCount: 1
+
+image:
+  repository: diadem
+  tag: latest
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+# Database configuration (required - no database is deployed by this chart)
+database:
+  # Internal database for Diadem (users, sessions, settings)
+  internal:
+    host: ""
+    port: 3306
+    database: "diadem"
+    user: ""
+    password: ""
+  # External Golbat database
+  external:
+    host: ""
+    port: 3306
+    database: "golbat"
+    user: ""
+    password: ""
+
+# Drizzle-kit database push options
+dbPush:
+  # Skip database schema push entirely
+  skip: false
+  # Force database schema push (WARNING: may cause data loss on schema changes)
+  force: false
+
+# Diadem configuration file (config.toml)
+# This will be mounted as a ConfigMap
+config: |
+  [server.log]
+  level = "info"
+
+  [server.golbat]
+  url = "http://127.0.0.1:9001"
+  secret = ""
+
+  [server.dragonite]
+  url = "http://127.0.0.1:7272"
+  secret = ""
+
+  # [server.koji]
+  # url = "http://127.0.0.1:8080"
+  # secret = "secret"
+  # projectName = "reactmap"
+
+  # [server.nominatim]
+  # url = "http://127.0.0.1:500"
+  # basicAuth = ""
+
+  [server.auth]
+  enabled = true
+  optional = true
+
+  [server.auth.discord]
+  clientId = ""
+  clientSecret = ""
+  redirectUri = "https://map.example.com/login/discord/callback"
+
+  [client.discord]
+  serverLink = ""
+  serverId = ""
+
+  [[server.permissions]]
+  everyone = true
+  features = ["gym", "pokestop"]
+
+  # Database configuration is injected from values.database
+  # Do not set [server.db] or [server.internalDb] here
+
+  [client.general]
+  mapName = "Diadem"
+  defaultLocale = "en"
+  customHome = false
+
+  [[client.mapStyles]]
+  id = "positron"
+  name = "Positron"
+  url = "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
+  default = "light"
+
+  [[client.mapStyles]]
+  id = "dark"
+  name = "Dark"
+  url = "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
+  default = "dark"
+
+  [[client.uiconSets]]
+  id = "DEFAULT"
+  name = "GO"
+  url = "https://raw.githubusercontent.com/WatWowMap/wwm-uicons/main/"
+  base = { scale = 0.5 }
+  gym = { offsetY = -41 }
+  raid_pokemon = { scale = 1.2, offsetY = -50 }
+  raid_egg = { scale = 0.17, offsetY = -120 }
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts:
+    - host: map.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+    # - secretName: diadem-tls
+    #   hosts:
+    #     - map.example.com
+
+resources: {}
+  # limits:
+  #   cpu: 500m
+  #   memory: 512Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 256Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+podAnnotations: {}
+
+podSecurityContext:
+  fsGroup: 1001
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1001
+  runAsGroup: 1001
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
