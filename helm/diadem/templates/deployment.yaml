@@ -66,11 +66,7 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
             - name: config
-              mountPath: /app/build/server/config.toml
-              subPath: config.toml
-              readOnly: true
-            - name: config
-              mountPath: /app/src/lib/server/config.toml
+              mountPath: /app/config/config.toml
               subPath: config.toml
               readOnly: true
             - name: tmp
