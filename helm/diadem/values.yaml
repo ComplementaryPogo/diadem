@@ -106,7 +106,7 @@ config: |
 
 service:
   type: ClusterIP
-  port: 80
+  port: 3900
 
 ingress:
   enabled: false
