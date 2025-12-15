@@ -3,9 +3,9 @@
 replicaCount: 1
 
 image:
-  repository: diadem
+  repository: ghcr.io/ccev/diadem
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 imagePullSecrets: []
 nameOverride: ""
