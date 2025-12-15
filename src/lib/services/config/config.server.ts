@@ -14,6 +14,15 @@ console.log(`[config]   Nominatim URL: ${config.server.nominatim?.url ?? 'not co
 console.log(`[config]   Internal DB: ${config.server.internalDb?.host}:${config.server.internalDb?.port}/${config.server.internalDb?.database}`);
 console.log(`[config]   External DB: ${config.server.db?.host}:${config.server.db?.port}/${config.server.db?.database}`);
 
+// Log configured service URLs on startup
+console.log('[config] Loaded server configuration:');
+console.log(`[config]   Golbat URL: ${config.server.golbat?.url ?? 'not configured'}`);
+console.log(`[config]   Dragonite URL: ${config.server.dragonite?.url ?? 'not configured'}`);
+console.log(`[config]   Koji URL: ${config.server.koji?.url ?? 'not configured'}`);
+console.log(`[config]   Nominatim URL: ${config.server.nominatim?.url ?? 'not configured'}`);
+console.log(`[config]   Internal DB: ${config.server.internalDb?.host}:${config.server.internalDb?.port}/${config.server.internalDb?.database}`);
+console.log(`[config]   External DB: ${config.server.db?.host}:${config.server.db?.port}/${config.server.db?.database}`);
+
 export function getServerConfig() {
 	return config.server;
 }

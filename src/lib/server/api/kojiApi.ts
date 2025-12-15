@@ -13,13 +13,32 @@ export async function fetchKojiGeofences(thisFetch?: typeof fetch): Promise<Koji
 	}
 
 	const url = config.koji.url + '/api/v1/geofence/FeatureCollection/' + config.koji.projectName;
-	const response = await (thisFetch ?? fetch)(url, {
-		method: 'GET',
-		headers: {
-			Authorization: `Bearer ${config.koji.secret}`,
-			'Content-Type': 'application/json'
-		}
-	});
+	log.info(`Fetching Koji geofences from: ${url}`);
+
+	let response: Response;
+	try {
+		response = await (thisFetch ?? fetch)(url, {
+			method: 'GET',
+			headers: {
+				Authorization: `Bearer ${config.koji.secret}`,
+				'Content-Type': 'application/json'
+			}
+		});
+	} catch (err) {
+		log.error(`Failed to fetch Koji geofences from ${url}: ${err}`);
+		return {
+			error: `Fetch failed: ${err}`,
+			result: {}
+		};
+	}
+
+	if (!response.ok) {
+		log.error(`Koji returned HTTP ${response.status} ${response.statusText} from ${url}`);
+		return {
+			error: `HTTP ${response.status}: ${response.statusText}`,
+			result: {}
+		};
+	}
 
 	if (!response.ok) {
 		log.error("Koji Error: %d (%s)", response.status, await response.text())
