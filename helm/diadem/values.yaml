@@ -151,4 +151,5 @@ securityContext:
   capabilities:
     drop:
       - ALL
+  # Will need to be changed if log file writing is set to true in diadem config
   readOnlyRootFilesystem: true
