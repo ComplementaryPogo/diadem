@@ -168,7 +168,7 @@
 	<GeometryLayer id={MapSourceId.SELECTED_WEATHER} reactive={false} />
 	<GeometryLayer id={MapSourceId.SCOUT_BIG_POINTS} data={getCurrentScoutData().bigPoints} />
 	<GeometryLayer id={MapSourceId.SCOUT_SMALL_POINTS} data={getCurrentScoutData().smallPoints} />
-	{#if getUserSettings().showMapFences}
+	{#if getUserSettings().showMapFences && hasLoadedFeature(LoadedFeature.KOJI)}
 		<FenceLayer data={getMapFencesGeojson()} />
 	{/if}
 
