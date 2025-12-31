@@ -1,5 +1,5 @@
 import type { Feature, FeatureCollection, Polygon } from 'geojson';
-import { getKojiGeofences, onGeofencesLoaded } from './koji';
+import { getKojiGeofences } from './koji';
 
 type MapFenceProperties = {
 	id: string
@@ -10,16 +10,7 @@ type MapFenceProperties = {
 
 type MapFenceFeature = Feature<Polygon, MapFenceProperties>
 
-let mapFencesGeojson: FeatureCollection<Polygon, MapFenceProperties> = $state({
-	type: 'FeatureCollection',
-	features: []
-})
-
-export function getMapFencesGeojson() {
-	return mapFencesGeojson
-}
-
-function updateMapFencesGeojson() {
+function buildMapFencesGeojson(): FeatureCollection<Polygon, MapFenceProperties> {
 	const geofences = getKojiGeofences()
 	const styles = typeof document !== 'undefined'
 		? getComputedStyle(document.documentElement)
@@ -27,18 +18,22 @@ function updateMapFencesGeojson() {
 	const strokeColor = styles?.getPropertyValue('--fence-stroke') || 'rgba(100, 149, 237, 0.7)'
 	const fillColor = styles?.getPropertyValue('--fence-fill') || 'rgba(100, 149, 237, 0.15)'
 
-	mapFencesGeojson.features = geofences.map((fence, index): MapFenceFeature => ({
-		type: 'Feature',
-		geometry: fence.geometry,
-		id: `fence-${index}`,
-		properties: {
+	return {
+		type: 'FeatureCollection',
+		features: geofences.map((fence, index): MapFenceFeature => ({
+			type: 'Feature',
+			geometry: fence.geometry,
 			id: `fence-${index}`,
-			name: fence.properties.name,
-			strokeColor,
-			fillColor
-		}
-	}))
+			properties: {
+				id: `fence-${index}`,
+				name: fence.properties.name,
+				strokeColor,
+				fillColor
+			}
+		}))
+	}
 }
 
-// Register callback to update when geofences load
-onGeofencesLoaded(updateMapFencesGeojson)
+export function getMapFencesGeojson(): FeatureCollection<Polygon, MapFenceProperties> {
+	return buildMapFencesGeojson()
+}
