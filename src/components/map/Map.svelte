@@ -22,6 +22,7 @@
 	import maplibre from "maplibre-gl";
 	import { getS2CellGeojson } from "@/lib/mapObjects/s2cells.svelte.js";
 	import GeometryLayer from "@/components/map/GeometryLayer.svelte";
+	import FenceLayer from "@/components/map/FenceLayer.svelte";
 	import DebugMenu from "@/components/map/DebugMenu.svelte";
 	import { hasLoadedFeature, LoadedFeature } from "@/lib/services/initialLoad.svelte.js";
 	import { openToast } from "@/lib/ui/toasts.svelte.js";
@@ -168,7 +169,7 @@
 	<GeometryLayer id={MapSourceId.SCOUT_BIG_POINTS} data={getCurrentScoutData().bigPoints} />
 	<GeometryLayer id={MapSourceId.SCOUT_SMALL_POINTS} data={getCurrentScoutData().smallPoints} />
 	{#if getUserSettings().showMapFences}
-		<GeometryLayer id={MapSourceId.MAP_FENCES} data={getMapFencesGeojson()} />
+		<FenceLayer data={getMapFencesGeojson()} />
 	{/if}
 
 	<GeoJSON
